@@ -2,82 +2,27 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="initial-scale=1.0">
-		<title>GetUserMedia waveform demo</title>
+		<meta name="viewport" content="initial-scale=1">
+		<title> GetUserMedia waveform demo </title>
 		<style>
-html, body {
+html {
+	background-color: #272822;
+	color: #fff;
+	font-family: monospace;
+}
+
+body {
+	align-items: center;
+	display: flex;
+	height: 100vh;
+	justify-content: center;
 	margin: 0;
-	padding: 0;
 }
 		</style>
+		<script async src="app.js"></script>
+		<script async src="https://liamnewmarch.github.io/js/analytics.js"></script>
 	</head>
 	<body>
-		<canvas>Canvas support is required</canvas>
-		<script>
-
-document.addEventListener('DOMContentLoaded', function() {
-
-	var analyser, canvas, context, i, height, width, values;
-
-	canvas = document.querySelector('canvas');
-	canvas.width = width = window.innerWidth;
-	canvas.height = height = window.innerHeight;
-	context = canvas.getContext('2d');
-
-	values = [];
-
-	function nextFrame() {
-		var buffer, initialStartPoint, total = 0;
-		
-		buffer = new Uint8Array(analyser.frequencyBinCount);
-		analyser.getByteFrequencyData(buffer);
-		
-		for (i = 0; i < analyser.frequencyBinCount; i++) total += buffer[i];
-		values.push(total / analyser.frequencyBinCount);
-		while (values.length >= width) values.splice(0, 1);
-
-		context.fillStyle = 'white';
-		context.fillRect(0, 0, canvas.width, canvas.height);
-
-		context.fillStyle = 'rgb(230, 230, 230)';
-		context.fillRect(0, height / 2, width, 1);
-		for (i = 0; i < values.length; i++) {
-			context.fillRect(i, height / 2, 1, -values[i]);
-			context.fillRect(i, height / 2, 1, values[i]);
-		}
-
-		console.log(values.length);
-
-		requestAnimationFrame(nextFrame);
-	}
-
-	addEventListener('resize', function() {
-		console.log('resize');
-		canvas.width = width = window.innerWidth;
-		canvas.height = height = window.innerHeight;
-	}, false);
-
-	if ('webkitGetUserMedia' in navigator) {
-		navigator.webkitGetUserMedia({ 'audio': true }, function(stream) {
-			var audioContext, mediaStreamSource;
-			audioContext = new webkitAudioContext();
-			analyser = audioContext.createAnalyser();
-			analyser.fftSize = 2048;
-			analyser.smoothingTimeConstant = 0.65;
-			mediaStreamSource = audioContext.createMediaStreamSource(stream);
-			mediaStreamSource.connect(analyser);
-			analyser.connect(audioContext.destination);
-			nextFrame();
-		}, function() {
-			alert('No audio stream.');
-		});
-	} else {
-		alert('getUserMedia not supported on this device.');
-	}
-
-}, false);
-
-		</script>
-		<script async src="https://liamnewmarch.github.io/js/analytics.js"></script>
+		<p> Start </p>
 	</body>
 </html>
